@@ -24,4 +24,15 @@ public class ServicePackageController {
     public List<ServicePackage> getAllServicePackages() {
         return servicePackageService.getAllServicePackages();
     }
+
+    @PutMapping("/{id}")
+    public ServicePackage updateServicePackage(@PathVariable Long id, @RequestBody ServiceRequest request) {
+        return servicePackageService.updateServicePackage(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteServicePackage(@PathVariable Long id) {
+        servicePackageService.deleteServicePackage(id);
+    }
 }

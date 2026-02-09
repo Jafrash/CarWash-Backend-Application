@@ -22,4 +22,17 @@ public class CustomerService {
     public Customer getCustomerById(Long id) {
         return customerRepository.findById(id).orElseThrow();
     }
+
+    public Customer updateCustomer(Long id, Customer customer) {
+        Customer existing = customerRepository.findById(id).orElseThrow();
+        existing.setName(customer.getName());
+        existing.setEmail(customer.getEmail());
+        existing.setPhone(customer.getPhone());
+        existing.setArea(customer.getArea());
+        return customerRepository.save(existing);
+    }
+
+    public void deleteCustomer(Long id) {
+        customerRepository.deleteById(id);
+    }
 }

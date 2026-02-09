@@ -28,4 +28,15 @@ public class CleanerController {
     public List<Cleaner> getAvailableCleanersByArea(@PathVariable String area) {
         return cleanerService.getAvailableCleanersByArea(area);
     }
+
+    @PutMapping("/{id}")
+    public Cleaner updateCleaner(@PathVariable Long id, @RequestBody Cleaner cleaner) {
+        return cleanerService.updateCleaner(id, cleaner);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteCleaner(@PathVariable Long id) {
+        cleanerService.deleteCleaner(id);
+    }
 }

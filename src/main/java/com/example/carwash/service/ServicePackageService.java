@@ -42,6 +42,19 @@ public class ServicePackageService {
         return servicePackageRepository.findAll();
     }
 
+    public ServicePackage updateServicePackage(Long id, ServiceRequest request) {
+        ServicePackage existing = servicePackageRepository.findById(id).orElseThrow();
+        existing.setPackageType(request.getPackageType());
+        existing.setServiceType(request.getServiceType());
+        existing.setStartDate(request.getStartDate());
+        existing.setEndDate(calculateEndDate(request.getStartDate(), request.getPackageType()));
+        return servicePackageRepository.save(existing);
+    }
+
+    public void deleteServicePackage(Long id) {
+        servicePackageRepository.deleteById(id);
+    }
+
     private LocalDate calculateEndDate(LocalDate startDate, PackageType packageType) {
         return switch (packageType) {
             case WEEKLY -> startDate.plusWeeks(1);
