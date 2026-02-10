@@ -27,6 +27,10 @@ public class ServicePackageService {
         
         Cleaner assignedCleaner = availableCleaners.get(0);
         
+        if (!assignedCleaner.getAvailable()) {
+            throw new ServiceUnavailableException("Selected cleaner is not available");
+        }
+        
         ServicePackage servicePackage = new ServicePackage();
         servicePackage.setCustomer(customer);
         servicePackage.setCleaner(assignedCleaner);
@@ -34,8 +38,26 @@ public class ServicePackageService {
         servicePackage.setServiceType(request.getServiceType());
         servicePackage.setStartDate(request.getStartDate());
         servicePackage.setEndDate(calculateEndDate(request.getStartDate(), request.getPackageType()));
-        
+
+        servicePackage.setStatus(ServiceStatus.ACTIVE);
+
+        assignedCleaner.setAvailable(false);
+        cleanerService.saveCleaner(assignedCleaner);
+
         return servicePackageRepository.save(servicePackage);
+    }
+
+    public ServicePackage completeService(Long serviceId){
+        ServicePackage servicePackage = servicePackageRepository.findById(serviceId).orElseThrow(()-> new RuntimeException("Service not found"));
+
+        servicePackage.setStatus(ServiceStatus.COMPLETED);
+
+        Cleaner cleaner = servicePackage.getCleaner();
+        cleaner.setAvailable(true);
+        cleanerService.saveCleaner(cleaner);
+
+        return servicePackageRepository.save(servicePackage);
+
     }
 
     public List<ServicePackage> getAllServicePackages() {
@@ -47,7 +69,11 @@ public class ServicePackageService {
         existing.setPackageType(request.getPackageType());
         existing.setServiceType(request.getServiceType());
         existing.setStartDate(request.getStartDate());
-        existing.setEndDate(calculateEndDate(request.getStartDate(), request.getPackageType()));
+        existing.setEndDate(
+                calculateEndDate(
+                        request.getStartDate(),
+                        request.getPackageType())
+        );
         return servicePackageRepository.save(existing);
     }
 

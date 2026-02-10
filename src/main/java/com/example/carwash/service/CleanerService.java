@@ -12,6 +12,7 @@ public class CleanerService {
     private final CleanerRepository cleanerRepository;
 
     public Cleaner createCleaner(Cleaner cleaner) {
+        cleaner.setId(null);
         return cleanerRepository.save(cleaner);
     }
 
@@ -34,6 +35,11 @@ public class CleanerService {
         existing.setAvailable(cleaner.getAvailable());
         return cleanerRepository.save(existing);
     }
+
+    public Cleaner saveCleaner(Cleaner cleaner){
+        return cleanerRepository.save(cleaner);
+    }
+
 
     public void deleteCleaner(Long id) {
         cleanerRepository.deleteById(id);

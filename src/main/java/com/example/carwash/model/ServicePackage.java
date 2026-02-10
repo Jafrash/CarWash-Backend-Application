@@ -12,9 +12,11 @@ public class ServicePackage {
     private Long id;
     
     @ManyToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
     
     @ManyToOne
+    @JoinColumn(name = "cleaner_id")
     private Cleaner cleaner;
     
     @Enumerated(EnumType.STRING)
